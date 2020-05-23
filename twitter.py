@@ -16,7 +16,7 @@ for analyst in analystsSelect:
 
 #Adding tweets in DB...
 for analyst in analysts:
-    list_of_tweets =  query_tweets_from_user(analyst, limit = 10)
+    list_of_tweets =  query_tweets_from_user(analyst, limit = 1)
     for tweet in list_of_tweets:
         originalTweet = False
         #...only the original tweets
