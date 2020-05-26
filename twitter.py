@@ -6,7 +6,7 @@ import pyodbc
 #lang = "english"
 
 #Connection with DD
-conn = pyodbc.connect('Driver={SQL Server};''Server=DESKTOP-585PVI8;''Database=Forliza2;''Trusted_Connection=yes;')
+conn = pyodbc.connect('Driver={SQL Server};''Server=RREZARTPC\SQLEXPRESS;''Database=Forliza2;''Trusted_Connection=yes;')
 cursor = conn.cursor()
 
 
@@ -39,7 +39,7 @@ while True:
             params = (analystID,last_tweet.text)
             conn.execute("{CALL InsertTweets (?,?)}", params)
             conn.commit()
-    sleeptime = 10
+    sleeptime = 1
     sleep(sleeptime)
     # for i in range(sleeptime):
     #     print(i+1)
