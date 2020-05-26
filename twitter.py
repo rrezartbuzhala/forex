@@ -39,7 +39,8 @@ while True:
             params = (analystID,last_tweet.text)
             conn.execute("{CALL InsertTweets (?,?)}", params)
             conn.commit()
-    sleeptime = 10
+
+    sleeptime = 1
     sleep(sleeptime)
     # for i in range(sleeptime):
     #     print(i+1)
