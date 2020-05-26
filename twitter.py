@@ -6,7 +6,7 @@ import pyodbc
 #lang = "english"
 
 #Connection with DD
-conn = pyodbc.connect('Driver={SQL Server};''Server=DESKTOP-585PVI8;''Database=Forliza2;''Trusted_Connection=yes;')
+conn = pyodbc.connect('Driver={SQL Server};''Server=RREZARTPC\SQLEXPRESS;''Database=Forliza2;''Trusted_Connection=yes;')
 cursor = conn.cursor()
 
 
@@ -28,19 +28,19 @@ while True:
             continue
         last_tweet = list_of_tweets[0]
         try:
-            inserted_last = cursor.execute("select top 1 Tweet from AnalystTweets where AnalystID = '"+analystID+"' order by Id desc").fetchone()
+            inserted_last_tweet = cursor.execute("select top 1 Tweet from AnalystTweets where AnalystID = '"+analystID+"' order by Id desc").fetchone()
         except TypeError:
-            inserted_last = ('',)
+            inserted_last_tweet = ('',)
             
-        if inserted_last != None:
-            inserted_last = inserted_last.Tweet
+        if inserted_last_tweet != None:
+            inserted_last_tweet = inserted_last_tweet.Tweet
 
-        if last_tweet.screen_name == analyst and last_tweet.text != inserted_last:
+        if last_tweet.screen_name == analyst and last_tweet.text != inserted_last_tweet:
             params = (analystID,last_tweet.text)
             conn.execute("{CALL InsertTweets (?,?)}", params)
             conn.commit()
-
-    sleeptime = 1
+            
+    sleeptime = 20
     sleep(sleeptime)
     # for i in range(sleeptime):
     #     print(i+1)
