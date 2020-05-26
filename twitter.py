@@ -15,7 +15,8 @@ def get_keywords_in_tweet(tweet):
     keywords = []
     for keyword in keywords_select:
         keywords.append(keyword)
-        print('pause here, shower and sleep now')
+        # TO DO:  if keyword in tweet, add keyword to keywords list
+    return keywords
 
 
 while True:
@@ -47,6 +48,10 @@ while True:
             params = (analyst_id,last_tweet.text,str(uuid.uuid4()))
             conn.execute("{CALL InsertTweets (?,?,?)}", params)
             conn.commit()
+            keywords = get_keywords_in_tweet(params[1])
+            for keyword in keywords:
+                params = [keyword,params[2]]
+                conn.execute("{CALL InsertTweetsWithKeywords (?,?)}", params)
 
     sleeptime = 20
     sleep(sleeptime)
