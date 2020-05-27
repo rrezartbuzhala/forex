@@ -3,23 +3,37 @@ from time import sleep
 from colorama import Fore, Back, Style 
 import pyodbc 
 import uuid
+import copy
 
 #lang = "english"
 
 #Connection with DB
-conn = pyodbc.connect('Driver={SQL Server};''Server=RREZARTPC\SQLEXPRESS;''Database=Forliza2;''Trusted_Connection=yes;')
+conn = pyodbc.connect('Driver={SQL Server};''Server=RREZARTPC\SQLEXPRESS;''Database=Forliza;''Trusted_Connection=yes;')
 cursor = conn.cursor()
 
+class Keyword:
+    def __init__(self, id, keyword):
+        self.id = id
+        self.keyword = keyword
 
 def get_keywords_in_tweet(tweet):
-    keywords_select = cursor.execute('select keyword from Keywords').fetchone()
+    keywords_select = cursor.execute('select * from Keywords').fetchall()
     keywords = []
     for keyword in keywords_select:
-        keywords.append(keyword)
-        # TO DO:  if keyword in tweet, add keyword to keywords list
-    return keywords
-
-
+        keywords.append(Keyword(keyword.Id,keyword.Keyword))
+    result = []
+    # veq nese psh "sell" e jo "Sell"
+    # TO DO: create lsit of keyword variations
+    for keyword in keywords:
+        keyword_variations = [keyword.keyword.lower(),keyword.keyword.upper(),keyword.keyword.capitalize()]
+        keyword_in_tweet = False
+        for _keyword in keyword_variations:
+            if _keyword in tweet:
+                keyword_in_tweet = True
+                break
+        if keyword_in_tweet:
+            result.append(keyword) 
+    return result
 while True:
     #Retriving analyst usernames and Guids from DB
     analysts_usernames = []
@@ -46,15 +60,19 @@ while True:
             inserted_last_tweet = inserted_last_tweet.Tweet
 
         if last_tweet.screen_name == analyst_username and last_tweet.text != inserted_last_tweet:
-            params = (analyst_id,last_tweet.text,str(uuid.uuid4()))
+            tweet_id = str(uuid.uuid4())
+            params = (tweet_id,analyst_id,last_tweet.text)
+            print(params[0])
             conn.execute("{CALL InsertTweets (?,?,?)}", params)
             conn.commit()
-            keywords = get_keywords_in_tweet(params[1])
+            keywords = get_keywords_in_tweet(last_tweet.text)
             for keyword in keywords:
-                params = [keyword,params[2]]
+                params = [tweet_id,keyword.id]
+                print(params[0])
                 conn.execute("{CALL InsertTweetsWithKeywords (?,?)}", params)
+                conn.commit()
 
-    sleeptime = 20
+    sleeptime = 1
     sleep(sleeptime)
     # for i in range(sleeptime):
     #     print(i+1)
