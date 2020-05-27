@@ -22,16 +22,14 @@ def get_keywords_in_tweet(tweet):
     for keyword in keywords_select:
         keywords.append(Keyword(keyword.Id,keyword.Keyword))
     result = []
-    # veq nese psh "sell" e jo "Sell"
-    # TO DO: create lsit of keyword variations
     for keyword in keywords:
-        keyword_variations = [keyword.keyword.lower(),keyword.keyword.upper(),keyword.keyword.capitalize()]
-        keyword_in_tweet = False
-        for _keyword in keyword_variations:
-            if _keyword in tweet:
-                keyword_in_tweet = True
-                break
-        if keyword_in_tweet:
+        # keyword_variations = [keyword.keyword.lower(),keyword.keyword.upper(),keyword.keyword.capitalize()]
+        # keyword_in_tweet = False
+        # for _keyword in keyword_variations:
+        #     if _keyword in tweet:
+        #         keyword_in_tweet = True
+        #         break
+        if keyword.keyword.lower() in tweet.lower():
             result.append(keyword) 
     return result
 while True:
