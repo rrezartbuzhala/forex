@@ -2,6 +2,7 @@ from twitterscraper import query_tweets_from_user
 from time import sleep
 from colorama import Fore, Back, Style 
 import pyodbc 
+import uuid
 
 #lang = "english"
 
@@ -9,6 +10,9 @@ import pyodbc
 conn = pyodbc.connect('Driver={SQL Server};''Server=RREZARTPC\SQLEXPRESS;''Database=Forliza2;''Trusted_Connection=yes;')
 cursor = conn.cursor()
 
+def find_keywords_in_tweets():
+    keywords_select = cursor.execute('select * from Keywords').fetchall()
+    #
 
 while True:
     #Retriving analyst usernames and Guids from DB
@@ -36,8 +40,8 @@ while True:
             inserted_last_tweet = inserted_last_tweet.Tweet
 
         if last_tweet.screen_name == analyst and last_tweet.text != inserted_last_tweet:
-            params = (analystID,last_tweet.text)
-            conn.execute("{CALL InsertTweets (?,?)}", params)
+            params = (analystID,last_tweet.text, str(uuid.uuid4()))
+            conn.execute("{CALL InsertTweets (?,?,?)}", params)
             conn.commit()
     sleeptime = 20
     sleep(sleeptime)
