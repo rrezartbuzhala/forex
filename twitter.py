@@ -56,7 +56,7 @@ while True:
             
         if inserted_last_tweet != None:
             inserted_last_tweet = inserted_last_tweet.Tweet
-
+        # TODO : Add a boolean to tell if a tweet with the same text exists in DB
         if last_tweet.screen_name == analyst_username and last_tweet.text != inserted_last_tweet:
             tweet_id = str(uuid.uuid4())
             params = (tweet_id,analyst_id,last_tweet.text)
