@@ -1,6 +1,7 @@
 from twitterscraper import query_tweets_from_user
 from time import sleep
 from colorama import Fore, Back, Style 
+from datetime import date
 import pyodbc 
 import uuid
 import copy
@@ -59,15 +60,15 @@ while True:
         # TODO : Add a boolean to tell if a tweet with the same text exists in DB
         if last_tweet.screen_name == analyst_username and last_tweet.text != inserted_last_tweet:
             tweet_id = str(uuid.uuid4())
-            params = (tweet_id,analyst_id,last_tweet.text)
+            params = (tweet_id,analyst_id,last_tweet.text,date.Today(),date.Today())
             print(params[0])
-            conn.execute("{CALL InsertTweets (?,?,?)}", params)
+            conn.execute("{CALL InsertTweets (?,?,?,?,?)}", params)
             conn.commit()
             keywords = get_keywords_in_tweet(last_tweet.text)
             for keyword in keywords:
-                params = [tweet_id,keyword.id]
+                params = [tweet_id,keyword.id,date.Today(),date.Today()]
                 print(params[0])
-                conn.execute("{CALL InsertTweetsWithKeywords (?,?)}", params)
+                conn.execute("{CALL InsertTweetsWithKeywords (?,?,?,?)}", params)
                 conn.commit()
 
     sleeptime = 1
