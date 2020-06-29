@@ -66,9 +66,9 @@ while True:
             conn.commit()
             keywords = get_keywords_in_tweet(last_tweet.text)
             for keyword in keywords:
-                params = [tweet_id,keyword.id,date.Today(),date.Today()]
+                params = [tweet_id,keyword.id]
                 print(params[0])
-                conn.execute("{CALL InsertTweetsWithKeywords (?,?,?,?)}", params)
+                conn.execute("{CALL InsertTweetsWithKeywords (?,?)}", params)
                 conn.commit()
 
     sleeptime = 1
